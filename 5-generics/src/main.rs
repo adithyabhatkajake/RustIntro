@@ -1,8 +1,9 @@
+
+
 struct Generic<T>{
     pub val: T,
 }
 
-// TODO: Demostrate generics using error handling as example
 
 impl<T> Generic<T> 
 // This is called a trait bound
@@ -29,7 +30,7 @@ impl std::fmt::Display for CustomWorkingStruct {
     }
 }
 
-fn main() {
+fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("Hello, world!");
 
     let num = Generic::<usize>{val:0};
@@ -46,4 +47,17 @@ fn main() {
     // This is okay!
     let custom = Generic::<CustomWorkingStruct>{val: CustomWorkingStruct{val:0}};
     custom.display();
+
+    let f = std::fs::File::open("does-not-exist");
+    let _f = match f {
+        Ok(_inner_file) => (),
+        Err(e) => {
+            println!("Got an error: {}", e);
+        },
+    };
+
+    // short-hand form
+    let _f = std::fs::File::open("does-not-exist")?;
+
+    Ok(())
 }
